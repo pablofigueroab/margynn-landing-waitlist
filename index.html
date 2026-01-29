@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO Meta Tags -->
+  <title>Margynn | From proforma to catalog + pricing in minutes</title>
+  <meta name="description" content="Upload supplier proformas and build your eCommerce catalog in minutes with AI-powered pricing and real margins. Export to Shopify, WooCommerce or CSV.">
+  <meta name="keywords" content="ecommerce pricing, proforma extraction, catalog builder, landed cost calculator, margin calculator, shopify import, woocommerce">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph (Facebook, LinkedIn) -->
+  <meta property="og:title" content="Margynn | From proforma to catalog + pricing in minutes">
+  <meta property="og:description" content="Extract products, calculate landed costs, and export to your eCommerce in real-time. No spreadsheets.">
+  <meta property="og:image" content="https://margynn.vercel.app/assets/og-image.png">
+  <meta property="og:url" content="https://margynn.vercel.app">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Margynn | From proforma to catalog + pricing">
+  <meta name="twitter:description" content="Upload proformas, extract products, calculate margins, export to Shopify/Woo in minutes.">
+  <meta name="twitter:image" content="https://margynn.vercel.app/assets/og-image.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="./assets/icon-512.png">
+
+  <style>
+    :root{
+      --m-blue: #1f4f6f;
+      --m-blue-strong: #2b74ff;
+      --m-cyan: #22d3ee;
+      --m-ink: #0b1220;
+      --m-white: #ffffff;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:
+        radial-gradient(1000px 500px at 15% 10%, rgba(43,116,255,.18), transparent 55%),
+        radial-gradient(900px 500px at 85% 12%, rgba(34,211,238,.18), transparent 55%),
+        radial-gradient(circle at top middle, #ffffff 0%, #f7f9fc 45%, #eef4fb 100%);
+      color: var(--m-ink);
+    }
+
+    .glass-panel{
+      background:rgba(255,255,255,.78);
+      backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,.6);
+      box-shadow:0 22px 60px rgba(0,0,0,.08);
+    }
+
+    .hero-text-gradient{
+      background:linear-gradient(90deg, var(--m-blue-strong) 0%, var(--m-cyan) 60%, var(--m-blue) 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .input-shadow{ box-shadow:0 10px 30px rgba(11,18,32,.08); }
+
+    .btn-primary{
+      background:linear-gradient(135deg, var(--m-blue-strong) 0%, var(--m-cyan) 100%);
+      color:white;
+      box-shadow:0 14px 30px rgba(43,116,255,.25);
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+    .btn-primary:hover{
+      transform:translateY(-1px);
+      filter:saturate(1.05);
+      box-shadow:0 18px 38px rgba(43,116,255,.30);
+    }
+    .btn-primary:disabled{
+      opacity:0.6;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .btn-ghost{
+      background:rgba(255,255,255,.65);
+      border:1px solid rgba(15,23,42,.12);
+      transition:transform .18s ease, background .18s ease;
+    }
+    .btn-ghost:hover{ transform:translateY(-1px); background:rgba(255,255,255,.9); }
+
+    .video-shell{
+      background:linear-gradient(145deg,#0b1220,#000);
+      position:relative;
+      overflow:hidden;
+    }
+    .video-glow{
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.20) inset,
+        0 30px 80px rgba(43,116,255,.18),
+        0 18px 60px rgba(34,211,238,.12);
+    }
+    .play-button{
+      transition:transform .2s ease;
+      box-shadow:0 18px 45px rgba(34,211,238,.18);
+    }
+    .video-link:hover .play-button{ transform:translate(-50%,-50%) scale(1.06); }
+
+    .pill{
+      border:1px solid rgba(15,23,42,.10);
+      background:rgba(255,255,255,.75);
+    }
+
+    .cta-gradient{
+      background:linear-gradient(135deg,#071022 0%, #0b1a33 45%, #0a2740 100%);
+      box-shadow:0 30px 90px rgba(11,18,32,.18);
+    }
+
+    .soft-ring{
+      background:
+        radial-gradient(circle at 30% 30%, rgba(43,116,255,.22), transparent 55%),
+        radial-gradient(circle at 70% 70%, rgba(34,211,238,.18), transparent 55%);
+    }
+
+    .mini-illu{
+      background:linear-gradient(135deg, rgba(43,116,255,.10), rgba(34,211,238,.06));
+      border:1px solid rgba(15,23,42,.08);
+    }
+
+    [data-lang="es"]{ display:none; }
+    .lang-es [data-lang="en"]{ display:none; }
+    .lang-es [data-lang="es"]{ display:block; }
+
+    .hidden{ display:none; }
+
+    /* Tally iframe tuning */
+    .tally-embed iframe{ border-radius: 16px; }
+  </style>
+
+  <!-- Tally embed loader (recommended in <head>) -->
+  <script async src="https://tally.so/widgets/embed.js"></script>
+</head>
+
+<body class="min-h-screen overflow-x-hidden">
+
+  <!-- NAV -->
+  <nav class="flex justify-between items-center px-6 md:px-8 py-6 max-w-7xl mx-auto">
+    <div class="flex items-center gap-3">
+      <img src="./assets/icon-512.png" alt="Margynn icon" class="w-9 h-9" />
+      <img src="./assets/logo-margynn.png" alt="Margynn" class="h-6 hidden sm:block" />
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button id="langBtn" class="btn-ghost px-4 py-2 rounded-full text-sm font-semibold" aria-label="Toggle language">
+        EN / ES
+      </button>
+
+      <a href="#waitlist" class="btn-primary px-6 py-2 rounded-full text-sm font-semibold">
+        <span data-lang="en">Request access</span>
+        <span data-lang="es">Solicitar acceso</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-6 pt-14 pb-24 text-center">
+
+    <!-- badge -->
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full pill shadow-sm mb-8">
+      <span class="w-2 h-2 rounded-full" style="background:var(--m-cyan)"></span>
+      <span class="text-xs font-semibold uppercase tracking-wider text-slate-700" data-lang="en">
+        Early access (waitlist)
+      </span>
+      <span class="text-xs font-semibold uppercase tracking-wider text-slate-700" data-lang="es">
+        Early access (lista de espera)
+      </span>
+    </div>
+
+    <!-- HERO EN -->
+    <div data-lang="en">
+      <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-7 leading-[1.05]">
+        Upload a proforma and build your catalog <br class="hidden md:block">
+        <span class="hero-text-gradient underline decoration-slate-200/60">in minutes</span>
+        <span class="block text-slate-900 mt-2">with pricing and real margins</span>
+      </h1>
+
+      <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Margynn extracts products, quantities and costs <b>in real time</b> from proformas, invoices or Excel.
+        It calculates unit landed cost and suggested pricing, then exports everything ready for your eCommerce.
+      </p>
+    </div>
+
+    <!-- HERO ES -->
+    <div data-lang="es">
+      <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-7 leading-[1.05]">
+        Sube una proforma y crea tu catálogo <br class="hidden md:block">
+        <span class="hero-text-gradient underline decoration-slate-200/60">en minutos</span>
+        <span class="block text-slate-900 mt-2">con pricing y margen real</span>
+      </h1>
+
+      <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Margynn extrae productos, cantidades y costes <b>en tiempo real</b> desde proformas, facturas o Excel.
+        Calcula coste unitario y precio sugerido, y exporta todo listo para tu eCommerce.
+      </p>
+    </div>
+
+    <!-- WAITLIST (TALLY EMBED) -->
+    <div id="waitlist" class="max-w-lg mx-auto mb-8">
+      <div id="formContainer" class="tally-embed">
+        <!-- We keep two embeds so the language toggle also swaps the form context -->
+        <div data-lang="en">
+          <iframe
+            data-tally-src="https://tally.so/embed/pbD8jJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+            loading="lazy"
+            width="100%"
+            height="50"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            title="Margynn/Waitlist (EN)"
+          ></iframe>
+        </div>
+
+        <div data-lang="es">
+          <iframe
+            data-tally-src="https://tally.so/embed/pbD8jJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+            loading="lazy"
+            width="100%"
+            height="50"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            title="Margynn/Waitlist (ES)"
+          ></iframe>
+        </div>
+      </div>
+
+      <p class="text-xs text-slate-500 mt-3" data-lang="en">
+        Invite-only. No spam. Unsubscribe anytime.
+      </p>
+      <p class="text-xs text-slate-500 mt-3" data-lang="es">
+        Acceso por invitación. Sin spam. Baja cuando quieras.
+      </p>
+    </div>
+
+    <!-- TRUST STRIP -->
+    <div class="max-w-3xl mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+
+      <div class="glass-panel rounded-2xl p-5 border border-white/50">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+               style="background:rgba(43,116,255,.12)">
+            <svg class="w-5 h-5" style="color:var(--m-blue-strong)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold" data-lang="en">Real-time extraction</p>
+            <p class="font-semibold" data-lang="es">Extracción en tiempo real</p>
+            <p class="text-sm text-slate-600" data-lang="en">From documents to structured products.</p>
+            <p class="text-sm text-slate-600" data-lang="es">De documentos a productos estructurados.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel rounded-2xl p-5 border border-white/50">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+               style="background:rgba(34,211,238,.12)">
+            <svg class="w-5 h-5" style="color:var(--m-cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2z"></path>
+              <path d="M8 6h8"></path>
+              <path d="M8 10h2"></path><path d="M14 10h2"></path>
+              <path d="M8 14h2"></path><path d="M14 14h2"></path>
+              <path d="M8 18h8"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold" data-lang="en">Landed cost + real margins</p>
+            <p class="font-semibold" data-lang="es">Coste unitario + margen real</p>
+            <p class="text-sm text-slate-600" data-lang="en">Taxes, logistics & expenses prorated.</p>
+            <p class="text-sm text-slate-600" data-lang="es">Impuestos, logística y gastos prorrateados.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel rounded-2xl p-5 border border-white/50">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+               style="background:rgba(31,79,111,.10)">
+            <svg class="w-5 h-5" style="color:var(--m-blue)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 3h7v7"></path>
+              <path d="M10 14L21 3"></path>
+              <path d="M21 14v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold" data-lang="en">Export-ready</p>
+            <p class="font-semibold" data-lang="es">Listo para exportar</p>
+            <p class="text-sm text-slate-600" data-lang="en">CSV / Shopify / Woo workflows.</p>
+            <p class="text-sm text-slate-600" data-lang="es">Flujos CSV / Shopify / Woo.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VIDEO (AUTO-SWITCH BY LANGUAGE) -->
+    <div class="relative max-w-4xl mx-auto mt-16 mb-16">
+      <div class="rounded-3xl border border-white/60 shadow-2xl overflow-hidden glass-panel p-2">
+        <div class="rounded-2xl aspect-video w-full overflow-hidden bg-black">
+          <video
+            id="demoVideo"
+            class="w-full h-full"
+            controls
+            playsinline
+            preload="metadata"
+          >
+            <source id="demoVideoSrc" src="./assets/demo-en.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <p class="mt-4 text-sm font-semibold tracking-wide text-slate-600" data-lang="en">
+        Watch: proforma → catalog → pricing (48s)
+      </p>
+      <p class="mt-4 text-sm font-semibold tracking-wide text-slate-600" data-lang="es">
+        Ver: proforma → catálogo → pricing (48s)
+      </p>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="max-w-4xl mx-auto text-left mb-20">
+      <h2 class="text-2xl md:text-3xl font-bold tracking-tight" data-lang="en">How it works</h2>
+      <h2 class="text-2xl md:text-3xl font-bold tracking-tight" data-lang="es">Cómo funciona</h2>
+      <p class="text-slate-600 mt-2 mb-6" data-lang="en">Document → products → pricing → export.</p>
+      <p class="text-slate-600 mt-2 mb-6" data-lang="es">Documento → productos → pricing → export.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-panel rounded-3xl p-6 border border-white/50 overflow-hidden relative">
+          <div class="absolute inset-0 soft-ring opacity-60"></div>
+          <div class="relative">
+            <div class="w-12 h-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shadow-sm">
+              <svg class="w-6 h-6" style="color:var(--m-blue-strong)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <path d="M14 2v6h6"></path>
+                <path d="M8 13h8"></path>
+                <path d="M8 17h8"></path>
+              </svg>
+            </div>
+            <h3 class="mt-4 font-semibold text-lg" data-lang="en">1) Upload</h3>
+            <h3 class="mt-4 font-semibold text-lg" data-lang="es">1) Subir</h3>
+            <p class="text-sm text-slate-600 mt-2" data-lang="en">Proforma, invoice or Excel. We extract SKUs and costs.</p>
+            <p class="text-sm text-slate-600 mt-2" data-lang="es">Proforma, factura o Excel. Extraemos SKUs y costes.</p>
+
+            <div class="mini-illu mt-5 rounded-2xl p-4">
+              <div class="flex items-center justify-between text-xs text-slate-600">
+                <span>Proforma_Import_2026.pdf</span>
+                <span class="px-2 py-1 rounded-full bg-white/80 border border-slate-200">Processing…</span>
+              </div>
+              <div class="mt-3 h-2 rounded-full bg-white/80 border border-slate-200 overflow-hidden">
+                <div class="h-full w-2/3" style="background:linear-gradient(90deg,var(--m-blue-strong),var(--m-cyan))"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel rounded-3xl p-6 border border-white/50 overflow-hidden relative">
+          <div class="absolute inset-0 soft-ring opacity-60"></div>
+          <div class="relative">
+            <div class="w-12 h-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shadow-sm">
+              <svg class="w-6 h-6" style="color:var(--m-cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3h18v4H3z"></path>
+                <path d="M3 9h18v12H3z"></path>
+                <path d="M7 13h4"></path>
+                <path d="M7 17h6"></path>
+              </svg>
+            </div>
+            <h3 class="mt-4 font-semibold text-lg" data-lang="en">2) Price & margin</h3>
+            <h3 class="mt-4 font-semibold text-lg" data-lang="es">2) Precio y margen</h3>
+            <p class="text-sm text-slate-600 mt-2" data-lang="en">Edit anything. Landed cost and margins update instantly.</p>
+            <p class="text-sm text-slate-600 mt-2" data-lang="es">Edita lo que quieras. Coste y márgenes se recalculan al instante.</p>
+
+            <div class="mini-illu mt-5 rounded-2xl p-4">
+              <div class="flex items-center gap-2 text-xs text-slate-600 mb-3">
+                <span class="px-2 py-1 rounded-full bg-white/80 border border-slate-200">SKU</span>
+                <span class="px-2 py-1 rounded-full bg-white/80 border border-slate-200">Landed</span>
+                <span class="px-2 py-1 rounded-full bg-white/80 border border-slate-200">Margin</span>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between bg-white/80 border border-slate-200 rounded-xl px-3 py-2 text-sm">
+                  <span class="font-medium text-slate-800">SKU-091</span>
+                  <span class="text-slate-600">12.45€</span>
+                  <span class="font-semibold text-emerald-700">42%</span>
+                </div>
+                <div class="flex items-center justify-between bg-white/80 border border-slate-200 rounded-xl px-3 py-2 text-sm">
+                  <span class="font-medium text-slate-800">SKU-115</span>
+                  <span class="text-slate-600">8.10€</span>
+                  <span class="font-semibold" style="color:var(--m-blue-strong)">36%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel rounded-3xl p-6 border border-white/50 overflow-hidden relative">
+          <div class="absolute inset-0 soft-ring opacity-60"></div>
+          <div class="relative">
+            <div class="w-12 h-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shadow-sm">
+              <svg class="w-6 h-6" style="color:var(--m-blue)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v12"></path>
+                <path d="M8 11l4 4 4-4"></path>
+                <path d="M4 21h16"></path>
+              </svg>
+            </div>
+            <h3 class="mt-4 font-semibold text-lg" data-lang="en">3) Export</h3>
+            <h3 class="mt-4 font-semibold text-lg" data-lang="es">3) Exportar</h3>
+            <p class="text-sm text-slate-600 mt-2" data-lang="en">Export CSV or platform-ready format for your store.</p>
+            <p class="text-sm text-slate-600 mt-2" data-lang="es">Exporta CSV o formato listo para tu tienda.</p>
+
+            <div class="mini-illu mt-5 rounded-2xl p-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-600">Export</span>
+                <span class="text-xs px-2 py-1 rounded-full bg-white/80 border border-slate-200 text-slate-700">CSV</span>
+              </div>
+              <div class="mt-3 grid grid-cols-3 gap-2 text-xs">
+                <div class="bg-white/80 border border-slate-200 rounded-xl px-3 py-2 text-slate-700">Title</div>
+                <div class="bg-white/80 border border-slate-200 rounded-xl px-3 py-2 text-slate-700">Price</div>
+                <div class="bg-white/80 border border-slate-200 rounded-xl px-3 py-2 text-slate-700">SKU</div>
+              </div>
+              <div class="mt-2 text-[11px] text-slate-600" data-lang="en">Ready to import.</div>
+              <div class="mt-2 text-[11px] text-slate-600" data-lang="es">Listo para importar.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <div class="max-w-4xl mx-auto mb-6">
+      <div class="cta-gradient rounded-[2rem] p-10 md:p-12 text-white relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl" style="background:rgba(43,116,255,.25)"></div>
+        <div class="absolute -bottom-24 -left-24 w-72 h-72 rounded-full blur-3xl" style="background:rgba(34,211,238,.18)"></div>
+
+        <div class="relative z-10">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 tracking-tight" data-lang="en">
+            Less manual work. More control. More margin.
+          </h2>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 tracking-tight" data-lang="es">
+            Menos carga manual. Más control. Más margen.
+          </h2>
+
+          <p class="text-slate-200 text-lg mb-8 max-w-2xl mx-auto" data-lang="en">
+            Join the waitlist — we onboard users progressively.
+          </p>
+          <p class="text-slate-200 text-lg mb-8 max-w-2xl mx-auto" data-lang="es">
+            Únete a la lista — incorporamos usuarios progresivamente.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="#waitlist" class="btn-primary px-10 py-4 rounded-xl font-bold text-lg w-full sm:w-auto text-center">
+              <span data-lang="en">Request access</span>
+              <span data-lang="es">Solicitar acceso</span>
+            </a>
+            <p class="text-xs text-slate-200 max-w-[260px] text-left">
+              <span data-lang="en">* No card. Invite-only.</span>
+              <span data-lang="es">* Sin tarjeta. Por invitación.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="max-w-7xl mx-auto px-8 py-12 border-t border-slate-100 text-center text-slate-500 text-sm">
+    <div class="flex justify-center gap-8 mb-4">
+      <a href="./privacy.html" class="hover:text-slate-700 transition-colors">Privacy</a>
+      <a href="./terms.html" class="hover:text-slate-700 transition-colors">Terms</a>
+      <a href="./contact.html" class="hover:text-slate-700 transition-colors">Contact</a>
+    </div>
+    <p>&copy; 2026 Margynn. Centralize. Calculate. Grow.</p>
+  </footer>
+
+  <script>
+    // YouTube video IDs
+    const VIDEO_EN = "1Kck4VoJT_g";
+    const VIDEO_ES = "pZcprMC1460";
+
+    // Local MP4 paths
+    const VIDEO_EN_MP4 = "./assets/demo-en.mp4";
+    const VIDEO_ES_MP4 = "./assets/demo-es.mp4";
+
+    // Language toggle
+    const btn = document.getElementById('langBtn');
+    const frame = document.getElementById('ytFrame');
+
+    // Local video elements
+    const demoVideo = document.getElementById('demoVideo');
+    const demoVideoSrc = document.getElementById('demoVideoSrc');
+
+    // Start in EN by default
+    let isSpanish = false;
+
+    function setVideoByLang() {
+      const vid = isSpanish ? VIDEO_ES : VIDEO_EN;
+      // Keep it clean: rel=0 prevents unrelated suggestions
+      if (frame) frame.src = `https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1`;
+
+      // Swap local MP4
+      const nextSrc = isSpanish ? VIDEO_ES_MP4 : VIDEO_EN_MP4;
+      if (demoVideo && demoVideoSrc) {
+        const wasPlaying = !demoVideo.paused;
+        const currentTime = demoVideo.currentTime || 0;
+
+        demoVideo.pause();
+        demoVideoSrc.src = nextSrc;
+        demoVideo.load();
+
+        // Optional: keep time position if both videos are same structure/length
+        demoVideo.addEventListener('loadedmetadata', function onMeta() {
+          demoVideo.removeEventListener('loadedmetadata', onMeta);
+          try { demoVideo.currentTime = Math.min(currentTime, demoVideo.duration || currentTime); } catch(e){}
+          if (wasPlaying) demoVideo.play().catch(() => {});
+        });
+      }
+    }
+
+    function loadTallyEmbedsSafely() {
+      // If the embed script is already loaded, call it. If not, it will load from <head async>.
+      if (typeof Tally !== "undefined" && typeof Tally.loadEmbeds === "function") {
+        Tally.loadEmbeds();
+      } else {
+        // Fallback: set src on iframes with data-tally-src
+        document.querySelectorAll('iframe[data-tally-src]:not([src])').forEach(function(e){
+          e.src = e.dataset.tallySrc;
+        });
+      }
+    }
+
+    btn.addEventListener('click', () => {
+      document.body.classList.toggle('lang-es');
+      isSpanish = document.body.classList.contains('lang-es');
+      setVideoByLang();
+      // Ensure the visible Tally iframe gets initialized after toggling
+      loadTallyEmbedsSafely();
+    });
+
+    // Ensure correct video + tally on load
+    setVideoByLang();
+    window.addEventListener('load', loadTallyEmbedsSafely);
+  </script>
+</body>
+</html>
